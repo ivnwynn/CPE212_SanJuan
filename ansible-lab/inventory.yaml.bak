@@ -1,0 +1,32 @@
+all:
+  children:
+    ubuntu:
+      hosts:
+        server1:
+          ansible_host: 192.168.56.102
+          ansible_user: kaizoserver1
+          os_type: Ubuntu
+          apache_package: apache2
+          php_package: libapache2-mod-php
+
+
+        server2:
+          ansible_host: 192.168.56.103
+          ansible_user: kaizoserver2
+          os_type: Ubuntu
+          apache_package: apache2
+          php_package: libapache2-mod-php
+
+    centos:
+      hosts: 
+        server3:
+          ansible_host: 192.168.56.106
+          ansible_user: server
+          os_type: CentOS
+          apache_package: httpd
+          php_package: php
+
+    linuxservers:
+        children:
+          ubuntu:
+          centos:
