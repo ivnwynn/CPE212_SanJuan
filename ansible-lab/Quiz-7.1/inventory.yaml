@@ -1,0 +1,9 @@
+[web_servers]
+192.168.56.102 ansible_user=kaizoserver1
+192.168.56.103 ansible_user=kaizoserver2
+
+[db_servers]
+192.168.56.106 ansible_user=server
+
+[file_servers]
+192.168.56.103 ansible_user=kaizoserver2
