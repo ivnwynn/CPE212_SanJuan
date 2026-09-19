@@ -1,0 +1,32 @@
+---
+- name: Install Nagios on Ubuntu
+  ansible.builtin.apt:
+    name:
+      - nagios4
+      - nagios-plugins-basic
+    state: present
+    update_cache: yes
+  when: ansible_facts['os_family'] == "Debian"
+  notify: restart nagios ubuntu
+
+- name: Install EPEL repo on CentOS
+  ansible.builtin.yum:
+    name: epel-release
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Install Nagios on CentOS
+  ansible.builtin.yum:
+    name:
+      - nagios
+      - nagios-plugins-all
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+  notify: restart nagios centos
+
+- name: Ensure Nagios is enabled and running
+  ansible.builtin.service:
+    name: "{{ 'nagios4' if ansible_facts['os_family'] == 'Debian' else 'nagios' }}"
+    state: started
+    enabled: yes
+# tasks file for roles/nagios
