@@ -1,0 +1,13 @@
+---
+- name: Install Logstash
+  package: { name: logstash, state: present }
+
+- name: Configure pipeline
+  template:
+    src: pipeline.conf.j2
+    dest: /etc/logstash/conf.d/main.conf
+    mode: '0644'
+  notify: restart logstash
+
+- name: Enable and start Logstash
+  systemd: { name: logstash, enabled: true, state: started }

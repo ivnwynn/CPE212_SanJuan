@@ -1,0 +1,15 @@
+---
+- name: Install Kibana
+  package: { name: kibana, state: present }
+
+- name: Configure Kibana
+  template:
+    src: kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+    owner: root
+    group: kibana
+    mode: '0660'
+  notify: restart kibana
+
+- name: Enable and start Kibana
+  systemd: { name: kibana, enabled: true, state: started }

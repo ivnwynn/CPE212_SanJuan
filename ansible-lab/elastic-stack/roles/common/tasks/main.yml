@@ -1,0 +1,31 @@
+---
+- name: Create keyrings directory
+  file: { path: /etc/apt/keyrings, state: directory, mode: '0755' }
+  when: ansible_os_family == "Debian"
+
+- name: Download Elastic GPG key
+  get_url:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    dest: /etc/apt/keyrings/elastic.asc
+    mode: '0644'
+  when: ansible_os_family == "Debian"
+
+- name: Add Elastic apt repo
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/elastic.asc] https://artifacts.elastic.co/packages/8.x/apt stable main"
+    filename: elastic-8.x
+  when: ansible_os_family == "Debian"
+
+- name: Import Elastic GPG key
+  rpm_key:
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  when: ansible_os_family == "RedHat"
+
+- name: Add Elastic yum repo
+  yum_repository:
+    name: elastic-8.x
+    description: Elastic repository for 8.x
+    baseurl: https://artifacts.elastic.co/packages/8.x/yum
+    gpgcheck: true
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  when: ansible_os_family == "RedHat"
