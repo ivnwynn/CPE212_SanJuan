@@ -1,0 +1,11 @@
+- hosts: all
+  roles: [common]
+
+- hosts: elasticsearch
+  roles: [elasticsearch]
+
+- hosts: kibana
+  roles: [kibana]
+
+- hosts: logstash
+  roles: [logstash]

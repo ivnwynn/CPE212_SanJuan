@@ -1,0 +1,7 @@
+input { beats { port => 5044 } }
+output {
+  elasticsearch {
+    hosts => ["http://{{ es_host }}:9200"]
+    index => "logstash-%{+YYYY.MM.dd}"
+  }
+}

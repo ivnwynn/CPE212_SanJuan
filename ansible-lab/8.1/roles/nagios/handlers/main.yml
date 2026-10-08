@@ -1,0 +1,10 @@
+---
+- name: restart nagios ubuntu
+  ansible.builtin.service:
+    name: nagios4
+    state: restarted
+
+- name: restart nagios centos
+  ansible.builtin.service:
+    name: nagios
+    state: restarted
