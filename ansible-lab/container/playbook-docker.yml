@@ -1,0 +1,50 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Add Docker repo (CentOS)
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Docker (Ubuntu)
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+    - name: Install Docker (CentOS)
+      ansible.builtin.dnf:
+        name: docker-ce
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Enable and start docker service and socket
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop: [docker.socket, docker.service]
+
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+        
+    - name: Create build directory
+      ansible.builtin.file:
+        path: /opt/webdb
+        state: directory
+        mode: "0755"
+
+    - name: Copy Dockerfile
+      ansible.builtin.copy:
+        src: Dockerfile
+        dest: /opt/webdb/Dockerfile
+        mode: "0644"
+
+    - name: Build image
+      ansible.builtin.command: docker build -t webdb:latest /opt/webdb
+      changed_when: true
